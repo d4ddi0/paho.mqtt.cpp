@@ -5,6 +5,7 @@ Release:            1%{?dist}
 License:            BSD and EPL-1.0
 Source:             https://github.com/eclipse/paho.mqtt.cpp/archive/v%{version}/%{name}-%{version}.tar.gz
 URL:                https://eclipse.org/paho/clients/cpp/
+BuildRequires:      catch-devel
 BuildRequires:      cmake3
 BuildRequires:      gcc-c++
 BuildRequires:      graphviz
@@ -37,7 +38,7 @@ Development documentation files for the the Paho MQTT CPP Client.
 %autosetup -n paho.mqtt.cpp-%{version}
 
 %build
-%cmake -DPAHO_WITH_SSL=TRUE -DPAHO_BUILD_DOCUMENTATION=TRUE
+%cmake -DPAHO_WITH_SSL=TRUE -DPAHO_BUILD_DOCUMENTATION=TRUE -DPAHO_BUILD_TESTS=ON
 %cmake_build
 
 %install
@@ -50,6 +51,9 @@ cp -a src/samples/*.cpp %{buildroot}%{_docdir}/%{name}/samples/
 mv %{buildroot}%{_docdir}/html %{buildroot}%{_docdir}/%{name}/html
 mkdir -p %{buildroot}%{_libdir}/cmake
 mv %{buildroot}/usr/lib/cmake/PahoMqttCpp %{buildroot}%{_libdir}/cmake
+
+%check
+%{__cmake_builddir}/test/unit/unit_tests
 
 %files
 %license edl-v10 epl-v10
